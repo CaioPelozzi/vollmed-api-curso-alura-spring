@@ -1,18 +1,18 @@
-package med.voll.api.domain.medico;
+package med.voll.api.domain.paciente;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 import med.voll.api.domain.endereco.Endereco;
 
-@Entity(name = "Medicos")
-@Table(name = "medicos")
+@Entity(name = "Pacientes")
+@Table(name = "pacientes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Medico {
+public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,29 +20,27 @@ public class Medico {
     private String nome;
     private String email;
     private String telefone;
-    private String crm;
-    @Enumerated(EnumType.STRING)
-    private Especialidade especialidade;
     @Embedded
     private Endereco endereco;
-    private boolean ativo;
+    private boolean ativo = true;
 
-    public Medico(DadosCadastroMedico dados) {
+    public Paciente(DadosCadastroPaciente dados) {
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
-        this.crm = dados.crm();
-        this.especialidade = dados.especialidade();
         this.endereco = new Endereco(dados.endereco());
-        this.ativo = true;
     }
 
-    public void atualizarInformacoes(@Valid DadosAtualizacaoMedico dados) {
-        if (dados.nome() != null){
+    public void atualizarInformacoes(DadosAtualizacaoPaciente dados) {
+        if (dados.nome() != null && !dados.nome().trim().isEmpty()){
             this.nome = dados.nome();
         }
 
-        if (dados.telefone() != null){
+        if (dados.email() != null && !dados.email().trim().isEmpty()){
+            this.nome = dados.email();
+        }
+
+        if (dados.telefone() != null && !dados.telefone().trim().isEmpty()){
             this.telefone = dados.telefone();
         }
 
@@ -51,7 +49,4 @@ public class Medico {
         }
     }
 
-    public void desativar(){
-        this.ativo = false;
-    }
 }
